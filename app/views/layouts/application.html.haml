@@ -9,8 +9,22 @@
     = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
     = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
   %body
-    - if notice
-      %p.alert.alert-success= notice
-    - if alert
-      %p.alert.alert-danger= alert
-    = yield
+    .container-fluid
+      %nav.navbar.navbar-expand-lg.navbar-light.bg-light
+        %button.navbar-toggler{"aria-controls" => "navbarTogglerDemo01", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarTogglerDemo01", "data-toggle" => "collapse", :type => "button"}
+          %span.navbar-toggler-icon
+        #navbarTogglerDemo01.collapse.navbar-collapse
+          %a.navbar-brand{:href => "#"} Contact importer
+        - if current_user
+          .my-2.my-lg-0
+            = link_to "Sign out", destroy_user_session_path, method: :delete
+        - else
+          .my-2.my-lg-0
+            = link_to "Sign in", new_user_session_path, method: :get
+
+      - if notice
+        %p.alert.alert-success= notice
+      - if alert
+        %p.alert.alert-danger= alert
+        
+      = yield

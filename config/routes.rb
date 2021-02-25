@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  root to: "contacts#index"
   devise_for :users
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+  
+  scope :contacts do
+    get '/' => 'contacts#index', as: :contacts
+    post 'manage_csv' => 'contacts#manage_csv', as: :contacts_manage_csv
+  end
+
 end

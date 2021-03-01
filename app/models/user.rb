@@ -6,5 +6,6 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :contacts, class_name: "Contact", foreign_key: "user_id", dependent: :destroy
+  has_many :contact_files, class_name: "ContactFile", foreign_key: "user_id", dependent: :destroy
   
 end

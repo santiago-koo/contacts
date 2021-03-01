@@ -1,0 +1,26 @@
+
+- if @contact_files.empty?
+  .row
+    %p There are not contact files yet
+- else
+  %table.table
+    %thead
+      %tr
+        - @table_headers.each do |table_header|
+          %th{:scope => "col"}
+            = table_header.humanize
+    %tbody
+      - @contact_files.each do |contact_file|
+        %tr
+          %td= contact_file.name
+          %td= contact_file.status.humanize
+          %td= contact_file.original_headers.join(', ')
+          %td
+            = link_to "View", show_contacts_path(contact_file), method: :get, class: 'btn btn-primary'
+            = link_to "Process csv", open_modal_contacts_path(contact_file), method: :get, class: 'btn btn-primary', remote: true
+
+.row.mb-1
+  = link_to "Upload contact files", new_contact_file_path, method: :get
+
+-# .row
+-#   = will_paginate @contact_files, renderer: BootstrapPagination::Rails

@@ -7,8 +7,8 @@
 -# .row.mb-1
 -#   = link_to "Listar archivos cargados", list_contact_files_path, method: :get
 
-.form-group
-  = form_for :upload_csv, url: contacts_manage_csv_path, html: { multipart: true, id: 'upload_csv_form' } do |f|
-    .custom-file
-      = f.file_field :file, accept: ".csv"
-    = f.submit "Submit", id: 'uploadButton', class: 'btn btn-success'
+-# .form-group
+-#   = form_for :upload_csv, url: contacts_manage_csv_path, html: { multipart: true, id: 'upload_csv_form' } do |f|
+-#     .custom-file
+-#       = f.file_field :file, accept: ".csv"
+-#     = f.submit "Submit", id: 'uploadButton', class: 'btn btn-success'

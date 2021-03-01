@@ -10,6 +10,40 @@ class Contact < ApplicationRecord
   validates :address, presence: true
   validates :credit_card, presence: true
 
+  validate :validate_birth_date
+  validate :validate_credit_card
+
   belongs_to :user, class_name: "User", foreign_key: "user_id"
+  belongs_to :contact_file, class_name: "ContactFile", foreign_key: "contact_file_id"
+
+  before_save :encrypt_credit_card
+
+  private
+
+  def encrypt_credit_card
+    begin
+      self.credit_card = Digest::SHA2.hexdigest(self.credit_card)
+    rescue => e
+      self.credit_card = ""
+    end
+  end  
+
+  def validate_birth_date
+    begin
+      date = Date.parse(self.birth_date.to_s)
+      date_format = date.strftime("%F")
+
+      errors.add(:birth_date, 'Birth date invalid') unless date_format == self.birth_date
+    rescue => e
+      errors.add(:birth_date, 'Birth date invalid')
+    end
+  end
+
+  def validate_credit_card
+    detector = CreditCardDetector::Detector.new(credit_card)
+    self.franchise = detector.brand_name
+    
+    errors.add(:credit_card, 'Credit card invalid') if self.franchise.nil?
+  end
 
 end

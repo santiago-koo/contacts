@@ -1,0 +1,23 @@
+%table.table
+  %thead
+    %tr
+      - @show_table_headers.each do |table_header|
+        %th{:scope => "col"}
+          = table_header.humanize
+  %tbody
+    - contacts_to_show.each do |contact|
+      %tr
+        %td= contact.email
+        %td= contact.name
+        %td= contact.birth_date
+        %td= contact.phone_number
+        %td= contact.address
+        %td= contact.franchise
+        %td= "****#{contact.last_four_credt_card_numbers}"
+        %td= contact.created_at.strftime("%F")
+
+.row.mb-1
+  = link_to "Back", request.referer.present? ? request.referer : root_path
+
+-# .row
+  = will_paginate @contact_files, renderer: BootstrapPagination::Rails

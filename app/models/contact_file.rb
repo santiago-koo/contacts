@@ -8,5 +8,6 @@ class ContactFile < ApplicationRecord
 
   belongs_to :user, class_name: "User", foreign_key: "user_id"
   has_many :contacts, class_name: "Contact", foreign_key: "contact_file_id", dependent: :destroy
+  has_many :failed_contacts, class_name: "FailedContact", foreign_key: "contact_file_id", dependent: :destroy
 
 end

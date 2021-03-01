@@ -15,9 +15,13 @@
           %td= contact_file.name
           %td= contact_file.status.humanize
           %td= contact_file.original_headers.join(', ')
+          %td= contact_file.created_at.strftime("%F")
           %td
-            = link_to "View", show_contacts_path(contact_file), method: :get, class: 'btn btn-primary'
-            = link_to "Process csv", open_modal_contacts_path(contact_file), method: :get, class: 'btn btn-primary', remote: true
+            - if contact_file.status == "on_hold"
+              = link_to "Process csv", open_modal_contacts_path(contact_file), method: :get, class: 'btn btn-primary', remote: true
+            - else 
+              = link_to "View contacts", show_contacts_path(contact_file), method: :get, class: 'btn btn-primary'
+              = link_to "View failed contacts", show_failed_contacts_path(contact_file), method: :get, class: 'btn btn-primary'
 
 .row.mb-1
   = link_to "Upload contact files", new_contact_file_path, method: :get

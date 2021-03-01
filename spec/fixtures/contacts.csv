@@ -2,3 +2,4 @@ nombre,fecha_de_nacimiento,telefono,direccion,tarjeta_de_credito,email
 Jairo,1995-11-29,(+00) 000 000 00 00,false street 123,30569309025904,colaborador_1@demo.com
 Jairo,1995-11-29,(+00) 000 000 00 00,false street 123,30569309025904,colaborador_1demo.com
 Miguel,1995-11-29,(+57) 000 000 00 00,fake street 123,3530111333300000,colaborador_2@demo.com
+Santiago,1999-11-29,(+57) 000 000 00 00,fake street 123,3530111333300000,colaborador_2@demo.com

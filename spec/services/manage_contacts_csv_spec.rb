@@ -21,7 +21,17 @@ RSpec.describe ManageContactsCsv do
       
       # expect(result.success?).to eq(true)
       # expect(Contact.count).to eq(1)
-    end  
+    end
+
+    it 'do not allow process already processed contact files' do
+      processed_contact_file = ContactFile.new(status: :finished)
+      processed_contact_file.save(validate: false)
+      
+      result = ::ManageContactsCsv.new({headers: {}, contact_file: processed_contact_file, user: user}).call()
+      expect(result.success?).to eq(false)
+      expect(result.payload[:error]).to eq("Contact file has been processed")
+      expect(Contact.where(contact_file_id: processed_contact_file.id).count).to eq(0)
+    end
   end
   
 end

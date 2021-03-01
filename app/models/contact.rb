@@ -3,13 +3,14 @@ class Contact < ApplicationRecord
   PHONE_NUMBER_REGEX = /\(([+][0-9]{1,2})\)([ .-]?)([0-9]{3})(\s|[-])([0-9]{3})(\s|[-])([0-9]{2})(\s|[-])([0-9]{2})/
   NAME_REGEX = /[A-Za-z0-9\-\s]/
 
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "Email invalid" }, presence: true, uniqueness: true
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: "Email invalid" }, presence: true
   validates :phone_number, format: { with: PHONE_NUMBER_REGEX, message: "Phone number invalid" }, presence: true
   validates :name, format: { with: NAME_REGEX, message: "Name invalid" }, presence: true
   validates :birth_date, presence: true
   validates :address, presence: true
   validates :credit_card, presence: true
 
+  validate :check_uniqueness_email
   validate :validate_birth_date
   validate :validate_credit_card
 
@@ -20,10 +21,17 @@ class Contact < ApplicationRecord
 
   private
 
+  def check_uniqueness_email
+    repeated_email = Contact.where(contact_file: self.contact_file, email: self.email).last
+    errors.add(:email, 'Repeated email') unless repeated_email.nil?
+  end
+
   def encrypt_credit_card
     begin
+      self.last_four_credt_card_numbers = self.credit_card.try(:last, 4)
       self.credit_card = Digest::SHA2.hexdigest(self.credit_card)
     rescue => e
+      self.last_four_credt_card_numbers = ""
       self.credit_card = ""
     end
   end  

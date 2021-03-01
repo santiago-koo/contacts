@@ -8,6 +8,7 @@ RSpec.describe ContactFile, type: :model do
 
   it { should belong_to :user }
   it { should have_many(:contacts) }
+  it { should have_many(:failed_contacts) }
 
   context "store csv_file" do
     it "download csv_file content" do

@@ -1,7 +1,7 @@
 class ContactFilesController < ApplicationController
 
   def index
-    @table_headers = %w{name status original_headers actions}
+    @table_headers = %w{name status original_headers created_at actions}
     @contact_files = current_user.contact_files
   end
 

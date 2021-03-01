@@ -48,7 +48,7 @@ class Contact < ApplicationRecord
   end
 
   def validate_credit_card
-    detector = CreditCardDetector::Detector.new(credit_card)
+    detector = CreditCardDetector::Detector.new(self.credit_card)
     self.franchise = detector.brand_name
     
     errors.add(:credit_card, 'Credit card invalid') if self.franchise.nil?

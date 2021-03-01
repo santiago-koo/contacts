@@ -37,9 +37,9 @@ class ManageContactsCsv
 
       return_message(true, {})
     rescue => e
-      @contact_file.update(status: :failed)
       Rails.logger.error e.message
       Rails.logger.error e.backtrace.join("\n")
+      @contact_file.update(status: :failed)
       return_message(false, {})
     end
   end

@@ -2,9 +2,13 @@ require 'rails_helper'
 
 RSpec.describe User, type: :model do
 
-  it { should validate_presence_of :email }
+  context "validations" do
+    it { should validate_presence_of :email }
+  end
 
-  it { should have_many(:contacts) }
-  it { should have_many(:contact_files) }
+  context "relationships" do
+    it { should have_many(:contacts) }
+    it { should have_many(:contact_files) }
+  end
 
 end

@@ -1,23 +1,16 @@
 Rails.application.routes.draw do
-  root to: "contact_files#index"
+  root to: 'contact_files#index'
   devise_for :users
 
   authenticate :user do
+    resources :contacts, only: :index
 
-    scope :contacts do
-      get '/' => 'contacts#index', as: :contacts
-      get 'show/:id' => 'contacts#show', as: :show_contacts
-      get 'show_failed_contacts/:id' => 'contacts#show_failed_contacts', as: :show_failed_contacts
-      get 'open_modal/:id' => 'contacts#open_modal', as: :open_modal_contacts
-      post 'process_csv/:id' => 'contacts#process_csv', as: :process_csv_contacts
+    resources :contact_files do
+      member do
+        get 'failed_contacts'
+        get 'open_modal'
+        post 'process_csv'
+      end
     end
-
-    scope :contact_files do
-      get '/' => 'contact_files#index', as: :contact_files
-      get '/new' => 'contact_files#new', as: :new_contact_file
-      post 'upload' => 'contact_files#upload', as: :upload_contact_file
-    end
-
   end
-  
 end

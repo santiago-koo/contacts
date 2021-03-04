@@ -3,7 +3,7 @@
     .modal{role:"dialog", tabindex:"-1", id: 'process_modal'}
       .modal-dialog.modal-lg{role: "document"}
         .modal-content
-          = form_for :process_csv, url: process_csv_contacts_path(@contact_file.id) do |f|
+          = form_for :process_csv, url: process_csv_contact_file_path(@contact_file.id) do |f|
             .modal-header
               %h5.modal-title 
                 = "Process #{@contact_file.name}"
@@ -33,7 +33,7 @@
                         %td
                           = contact.humanize
                         %td
-                          = f.text_field contact.to_sym
+                          = f.select contact.to_sym, @contact_file.original_headers.sort.map{ |original_header| [original_header, original_header] }, prompt: "Select your header"
             .modal-footer
               .btn.btn-secondary{"data-dismiss" => "modal", type: "button"} Close
               = f.submit "Upload contact file", id: 'uploadButton', class: 'btn btn-primary'

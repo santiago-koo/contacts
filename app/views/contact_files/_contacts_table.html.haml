@@ -14,7 +14,7 @@
         %td= contact.address
         %td= contact.franchise
         %td= "****#{contact.last_four_credt_card_numbers}"
-        %td= contact.created_at.strftime("%F")
+        %td= contact.created_at.strftime("%d-%m-%Y %H:%M")
 
 .row.mb-1
   = link_to "Back", request.referer.present? ? request.referer : root_path

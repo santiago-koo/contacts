@@ -1,5 +1,5 @@
 .form-group
-  = form_for :upload_csv, url: upload_contact_file_path, html: { multipart: true, id: 'upload_csv_form' } do |f|
+  = form_for :upload_csv, url: contact_files_path, html: { multipart: true, id: 'upload_csv_form' } do |f|
     .custom-file
       = f.file_field :file, accept: ".csv"
     = f.submit "Upload contact file", id: 'uploadButton', class: 'btn btn-success'

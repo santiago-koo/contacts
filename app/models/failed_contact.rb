@@ -1,26 +1,24 @@
+# == Schema Information
+#
+# Table name: failed_contacts
+#
+#  id                           :bigint           not null, primary key
+#  email                        :string
+#  name                         :string
+#  phone_number                 :string
+#  birth_date                   :string
+#  address                      :string
+#  credit_card                  :string
+#  last_four_credt_card_numbers :string
+#  franchise                    :string
+#  contact_file_id              :bigint
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#
 class FailedContact < ApplicationRecord
+  include CreditCard
 
-  belongs_to :contact_file, class_name: "ContactFile", foreign_key: "contact_file_id"
+  belongs_to :contact_file
 
-  before_create :get_franchise
-  before_create :encrypt_credit_card
-
-  private
-
-  def get_franchise
-    detector = CreditCardDetector::Detector.new(self.credit_card)
-    self.franchise = detector.brand_name || "Invalid franchise"
-  end
-  
-  def encrypt_credit_card
-    begin
-      self.last_four_credt_card_numbers = self.credit_card.try(:last, 4)
-      self.credit_card = Digest::SHA2.hexdigest(self.credit_card)
-    rescue => e
-      self.franchise = "Invalid franchise"
-      self.credit_card = "Invalid credit card"
-      self.last_four_credt_card_numbers = ""
-    end
-  end
-
+  before_create :save_credit_card
 end

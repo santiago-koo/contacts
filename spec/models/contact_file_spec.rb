@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: contact_files
+#
+#  id               :bigint           not null, primary key
+#  name             :string
+#  original_headers :text             default([]), is an Array
+#  status           :string
+#  user_id          :bigint
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
 require 'rails_helper'
 
 RSpec.describe ContactFile, type: :model do

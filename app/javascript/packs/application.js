@@ -14,7 +14,7 @@ Turbolinks.start()
 ActiveStorage.start()
 
 const images = require.context('../../assets/images', true)
-const imagePath = (name) => images(name, true)
+// const imagePath = (name) => images(name, true)
 
 var jQuery = require("jquery")
 

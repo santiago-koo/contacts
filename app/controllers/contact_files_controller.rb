@@ -8,7 +8,7 @@ class ContactFilesController < ApplicationController
   end
 
   def show
-    @contacts = @contact_file.contacts.order(:created_at)
+    @pagy, @contacts = pagy(@contact_file.contacts.order(:created_at), items: 5)
   end
 
   def new
@@ -31,7 +31,7 @@ class ContactFilesController < ApplicationController
   end
 
   def failed_contacts
-    @failed_contacts = @contact_file.failed_contacts.order(:created_at)
+    @pagy, @failed_contacts = pagy(@contact_file.failed_contacts.order(:created_at), items: 5)
   end
 
   def open_modal

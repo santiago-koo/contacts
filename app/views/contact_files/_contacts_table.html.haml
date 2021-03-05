@@ -17,7 +17,7 @@
         %td= contact.created_at.strftime("%d-%m-%Y %H:%M")
 
 .row.mb-1
-  = link_to "Back", request.referer.present? ? request.referer : root_path
+  = link_to "Back", contact_files_path
 
--# .row
-  = will_paginate @contact_files, renderer: BootstrapPagination::Rails
+.row
+  = raw pagy_bootstrap_nav(@pagy)

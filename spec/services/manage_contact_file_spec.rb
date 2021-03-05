@@ -7,7 +7,7 @@ RSpec.describe ManageContactFile do
     it 'upload csv' do
       filename = 'contacts.csv'
       file_path = "spec/fixtures/#{filename}"
-      result = ::ManageContactFile.new({file_path: file_path, user: user, filename: filename}).call
+      result = ::ManageContactFile.new({ file_path: file_path, user: user, filename: filename }).call
       expect(result.success?).to eq(true)
       expect(ContactFile.count).to eq(1)
     end
@@ -15,10 +15,9 @@ RSpec.describe ManageContactFile do
     it 'non existent csv file' do
       filename = 'non_existent.csv'
       file_path = "spec/fixtures/#{filename}"
-      result = ::ManageContactFile.new({file_path: file_path, user: user, filename: filename}).call
+      result = ::ManageContactFile.new({ file_path: file_path, user: user, filename: filename }).call
       expect(result.success?).to eq(false)
       expect(ContactFile.count).to eq(0)
     end
   end
-  
 end

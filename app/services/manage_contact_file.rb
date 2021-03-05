@@ -1,6 +1,8 @@
 require 'csv'
 
 class ManageContactFile
+  include ApplicationService
+
   def initialize(params = {})
     @csv_file_path = params[:file_path]
     @user = params[:user]
@@ -11,9 +13,7 @@ class ManageContactFile
     normalized_file_content = normalize_csv_file
     create_contact_file(normalized_file_content)
   rescue => e
-    Rails.logger.error e.message
-    Rails.logger.error e.backtrace.join("\n")
-    return_message(false, { error: e.message })
+    log_errors(e)
   end
 
   private
@@ -38,9 +38,5 @@ class ManageContactFile
     else
       return_message(false, { errors: contact_file.errors.messages })
     end
-  end
-
-  def return_message(success, payload={})
-    OpenStruct.new({success?: success, payload: payload})
   end
 end

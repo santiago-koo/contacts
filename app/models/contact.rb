@@ -11,7 +11,6 @@
 #  credit_card                  :string
 #  last_four_credt_card_numbers :string
 #  franchise                    :string
-#  user_id                      :bigint
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  contact_file_id              :bigint
@@ -22,7 +21,7 @@ class Contact < ApplicationRecord
   PHONE_NUMBER_REGEX = /\(([+][0-9]{1,2})\)([ .-]?)([0-9]{3})(\s|-)([0-9]{3})(\s|-)([0-9]{2})(\s|-)([0-9]{2})/.freeze
   NAME_REGEX = /[A-Za-z0-9\-\s]/.freeze
 
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: 'Invalid email' }, presence: true, uniqueness: { scope: :user_id, message: 'Email already taken' }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: 'Invalid email' }, presence: true, uniqueness: { scope: :contact_file_id, message: 'Email already taken' }
   validates :phone_number, format: { with: PHONE_NUMBER_REGEX, message: 'Invalid phone number' }, presence: true
   validates :name, format: { with: NAME_REGEX, message: 'Invalid Name' }, presence: true
   validates :birth_date, presence: true
@@ -32,7 +31,6 @@ class Contact < ApplicationRecord
   validate :validate_birth_date
   validate :validate_credit_card
 
-  belongs_to :user
   belongs_to :contact_file
 
   before_save :save_credit_card

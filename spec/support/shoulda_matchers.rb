@@ -5,4 +5,4 @@ Shoulda::Matchers.configure do |config|
   end
 end
 
-class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end;
+class ActiveModel::SecurePassword::InstanceMethodsOnActivation; end

@@ -44,7 +44,7 @@ class ContactFilesController < ApplicationController
     result = ::ManageContactsCsv.new(
       {
         headers: process_csv_params,
-        contact_file: @contact_file, user: current_user
+        contact_file: @contact_file
       }
     ).call
     if result.success?

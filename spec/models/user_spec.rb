@@ -19,7 +19,6 @@ RSpec.describe User, type: :model do
   end
 
   context 'relationships' do
-    it { should have_many(:contacts) }
     it { should have_many(:contact_files) }
   end
 end

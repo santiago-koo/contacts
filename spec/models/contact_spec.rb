@@ -11,7 +11,6 @@
 #  credit_card                  :string
 #  last_four_credt_card_numbers :string
 #  franchise                    :string
-#  user_id                      :bigint
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  contact_file_id              :bigint
@@ -20,7 +19,6 @@ require 'rails_helper'
 
 RSpec.describe Contact, type: :model do
   context 'relationships' do
-    it { should belong_to :user }
     it { should belong_to :contact_file }
   end
 
@@ -89,7 +87,6 @@ RSpec.describe Contact, type: :model do
         birth_date: '1995-12-12',
         address: 'fake street 123',
         credit_card: '4111111111111111',
-        user: user,
         contact_file: contact_file,
       }
       new_contact = Contact.new(contact_params)

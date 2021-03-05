@@ -3,11 +3,12 @@ require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../config/environment', __dir__)
 # Prevent database truncation if the environment is production
-abort("The Rails environment is running in production mode!") if Rails.env.production?
+abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'devise'
 require 'support/database_cleaner'
 require 'support/shoulda_matchers'
+require 'support/csv_helper'
 require 'capybara/rspec'
 require 'sidekiq/testing'
 require 'rake'
@@ -87,5 +88,5 @@ RSpec.configure do |config|
   config.include Rails.application.routes.url_helpers
 
   # Include all support helpers
-  Dir["./spec/support/**/*_helper.rb"].sort.each { |f| config.include File.basename( f, ".*" ).camelize.constantize}
+  Dir['./spec/support/**/*_helper.rb'].sort.each { |f| config.include File.basename(f, '.*').camelize.constantize }
 end

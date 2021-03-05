@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_01_161543) do
+ActiveRecord::Schema.define(version: 2021_03_05_193855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,10 +46,10 @@ ActiveRecord::Schema.define(version: 2021_03_01_161543) do
   create_table "contact_files", force: :cascade do |t|
     t.string "name"
     t.text "original_headers", default: [], array: true
-    t.string "status"
     t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0
     t.index ["user_id"], name: "index_contact_files_on_user_id"
   end
 
@@ -62,12 +62,10 @@ ActiveRecord::Schema.define(version: 2021_03_01_161543) do
     t.string "credit_card"
     t.string "last_four_credt_card_numbers"
     t.string "franchise"
-    t.bigint "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "contact_file_id"
     t.index ["contact_file_id"], name: "index_contacts_on_contact_file_id"
-    t.index ["user_id"], name: "index_contacts_on_user_id"
   end
 
   create_table "failed_contacts", force: :cascade do |t|
@@ -100,6 +98,5 @@ ActiveRecord::Schema.define(version: 2021_03_01_161543) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "contact_files", "users"
-  add_foreign_key "contacts", "users"
   add_foreign_key "failed_contacts", "contact_files"
 end

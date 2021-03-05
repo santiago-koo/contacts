@@ -50,6 +50,7 @@ class Contact < ApplicationRecord
 
   def validate_credit_card
     self.franchise = detect_franchise
+    self.last_four_credt_card_numbers = take_last_four_credit_card_numbers
     errors.add(:credit_card, 'Invalid credit card') if franchise.nil?
   end
 end

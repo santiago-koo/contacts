@@ -1,5 +1,5 @@
 class ContactFilesController < ApplicationController
-  before_action :contact_file, except: %i[index new]
+  before_action :contact_file, except: %i[index new create]
   before_action :get_table_headers, only: %i[open_modal show failed_contacts]
 
   def index
@@ -12,20 +12,20 @@ class ContactFilesController < ApplicationController
   end
 
   def new
-    # @contact_file = ContactFile.new()
+    @contact_file = ContactFile.new
   end
 
   def create
-    if params['upload_csv'].nil?
+    if params[:contact_file].nil?
       redirect_to contact_files_path
     else
-      file_path = params['upload_csv']['file'].try(:path)
-      filename = params['upload_csv']['file'].try(:original_filename)
+      file_path = params[:contact_file][:file].try(:path)
+      filename = params[:contact_file][:file].try(:original_filename)
       result = ::ManageContactFile.new({ file_path: file_path, user: current_user, filename: filename }).call
       if result.success?
         redirect_to contact_files_path, notice: 'File loaded successfully'
       else
-        redirect_to contact_files_path, alert: "#{result.payload[:error]}"
+        redirect_to contact_files_path, alert: result.payload[:error]
       end
     end
   end
@@ -43,7 +43,7 @@ class ContactFilesController < ApplicationController
   def process_csv
     result = ::ManageContactsCsv.new(
       {
-        headers: process_csv_params.to_h,
+        headers: process_csv_params,
         contact_file: @contact_file, user: current_user
       }
     ).call

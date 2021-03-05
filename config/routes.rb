@@ -3,8 +3,6 @@ Rails.application.routes.draw do
   devise_for :users
 
   authenticate :user do
-    resources :contacts, only: :index
-
     resources :contact_files do
       member do
         get 'failed_contacts'

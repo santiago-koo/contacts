@@ -62,7 +62,7 @@ class ContactFilesController < ApplicationController
 
   def get_table_headers
     @modal_table_headers = %w[email name birth_date phone_number address credit_card]
-    @show_table_headers = %w[email name birth_date phone_number address franchise created_at]
+    @show_table_headers = %w[email name birth_date phone_number address franchise last_four_credit_card_numbers created_at]
   end
 
   def process_csv_params

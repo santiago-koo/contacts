@@ -1,0 +1,5 @@
+version: 2.1
+jobs:
+  run_tests:
+    docker:
+      - image: circleci/ruby2.7.2

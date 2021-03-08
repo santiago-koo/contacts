@@ -3,7 +3,7 @@ module CreditCard
 
   def save_credit_card
     self.franchise = detect_franchise || 'Invalid franchise'
-    self.last_four_credt_card_numbers = take_last_four_credit_card_numbers
+    self.last_four_credit_card_numbers = take_last_four_credit_card_numbers
     self.credit_card = encrypt_credit_card || 'Invalid credit card'
   end
 

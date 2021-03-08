@@ -1,4 +1,4 @@
-
+- table_headers = %w[name status original_headers created_at actions]
 - if @contact_files.blank?
   .row
     %p There are not contact files yet
@@ -6,7 +6,7 @@
   %table.table
     %thead
       %tr
-        - @table_headers.each do |table_header|
+        - table_headers.each do |table_header|
           %th{:scope => "col"}
             = table_header.humanize
     %tbody

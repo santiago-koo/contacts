@@ -1,3 +1,4 @@
+- table_headers = %w[email name birth_date phone_number address credit_card]
 .container-fluid
   .row
     .modal{role:"dialog", tabindex:"-1", id: 'process_modal'}
@@ -28,7 +29,7 @@
                       %th{:scope => "col"}
                         Original header
                   %tbody
-                    - @modal_table_headers.each do |contact|
+                    - table_headers.each do |contact|
                       %tr 
                         %td
                           = contact.humanize

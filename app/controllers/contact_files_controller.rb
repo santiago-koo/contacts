@@ -1,9 +1,7 @@
 class ContactFilesController < ApplicationController
   before_action :contact_file, except: %i[index new create]
-  before_action :get_table_headers, only: %i[open_modal show failed_contacts]
 
   def index
-    @table_headers = %w[name status original_headers created_at actions]
     @contact_files = current_user.contact_files.order(created_at: :desc)
   end
 
@@ -58,11 +56,6 @@ class ContactFilesController < ApplicationController
 
   def contact_file
     @contact_file = current_user.contact_files.where(id: params[:id]).take || not_found
-  end
-
-  def get_table_headers
-    @modal_table_headers = %w[email name birth_date phone_number address credit_card]
-    @show_table_headers = %w[email name birth_date phone_number address franchise last_four_credit_card_numbers created_at]
   end
 
   def process_csv_params

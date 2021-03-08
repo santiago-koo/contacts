@@ -2,18 +2,18 @@
 #
 # Table name: contacts
 #
-#  id                           :bigint           not null, primary key
-#  email                        :string
-#  name                         :string
-#  phone_number                 :string
-#  birth_date                   :string
-#  address                      :string
-#  credit_card                  :string
-#  last_four_credt_card_numbers :string
-#  franchise                    :string
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  contact_file_id              :bigint
+#  id                            :bigint           not null, primary key
+#  email                         :string
+#  name                          :string
+#  phone_number                  :string
+#  birth_date                    :string
+#  address                       :string
+#  credit_card                   :string
+#  last_four_credit_card_numbers :string
+#  franchise                     :string
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  contact_file_id               :bigint
 #
 require 'rails_helper'
 
@@ -93,7 +93,7 @@ RSpec.describe Contact, type: :model do
       new_contact.save
 
       expect(new_contact.franchise).to eq('Visa')
-      expect(new_contact.last_four_credt_card_numbers).to eq(contact_params[:credit_card].last(4))
+      expect(new_contact.last_four_credit_card_numbers).to eq(contact_params[:credit_card].last(4))
       expect(new_contact.credit_card).to eq(Digest::SHA2.hexdigest(contact_params[:credit_card]))
     end
   end

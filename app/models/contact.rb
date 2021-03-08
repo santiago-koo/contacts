@@ -2,18 +2,18 @@
 #
 # Table name: contacts
 #
-#  id                           :bigint           not null, primary key
-#  email                        :string
-#  name                         :string
-#  phone_number                 :string
-#  birth_date                   :string
-#  address                      :string
-#  credit_card                  :string
-#  last_four_credt_card_numbers :string
-#  franchise                    :string
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  contact_file_id              :bigint
+#  id                            :bigint           not null, primary key
+#  email                         :string
+#  name                          :string
+#  phone_number                  :string
+#  birth_date                    :string
+#  address                       :string
+#  credit_card                   :string
+#  last_four_credit_card_numbers :string
+#  franchise                     :string
+#  created_at                    :datetime         not null
+#  updated_at                    :datetime         not null
+#  contact_file_id               :bigint
 #
 class Contact < ApplicationRecord
   include CreditCard
@@ -48,7 +48,7 @@ class Contact < ApplicationRecord
 
   def validate_credit_card
     self.franchise = detect_franchise
-    self.last_four_credt_card_numbers = take_last_four_credit_card_numbers
+    self.last_four_credit_card_numbers = take_last_four_credit_card_numbers
     errors.add(:credit_card, 'Invalid credit card') if franchise.nil?
   end
 end

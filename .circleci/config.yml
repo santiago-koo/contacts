@@ -18,7 +18,6 @@ jobs:
           pkg-manager: yarn
           cache-key: "yarn.lock"
   test:
-    # parallelism: 3
     docker:
       - image: cimg/ruby:2.7.2-node
         auth:
@@ -55,7 +54,6 @@ jobs:
           command: bundle exec rails db:schema:load --trace
       # Run rspec in parallel
       - run: bundle exec rspec ./spec
-      # - ruby/rspec-test
 
 workflows:
   build_and_test:

@@ -13,7 +13,7 @@ class ManageContactsCsv
 
     begin
       @contact_file.update(status: :processing)
-      create_contact_from_csv
+      create_contacts_from_csv
       @contact_file.change_status
 
       return_message(true, {})
@@ -25,7 +25,7 @@ class ManageContactsCsv
 
   private
 
-  def create_contact_from_csv
+  def create_contacts_from_csv
     csv_file_content = @contact_file.csv_file.download
 
     ::CSV.parse(csv_file_content, converters: nil, headers: true) do |row|
@@ -39,7 +39,11 @@ class ManageContactsCsv
         contact_file: @contact_file
       )
 
-      create_failed_contact(new_contact) unless new_contact.save
+      if new_contact.save
+        # empty
+      else
+        create_failed_contact(new_contact)
+      end
     end
   end
 

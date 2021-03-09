@@ -26,29 +26,42 @@ RSpec.describe FailedContact, type: :model do
     let(:user) { create(:user) }
     let(:contact_file) { create(:contact_file, user_id: user.id) }
 
-    it 'set franchise with a valid credit card' do
-      credit_card = '4111111111111111'
-      new_failed_contact = FailedContact.create(credit_card: credit_card, contact_file: contact_file)
+    describe 'saving credit card on save' do
+      let(:new_failed_contact) { FailedContact.create(credit_card: credit_card, contact_file: contact_file) }
 
-      expect(new_failed_contact.last_four_credit_card_numbers).to eq(credit_card.last(4))
-      expect(new_failed_contact.franchise).to eq('Visa')
-    end
+      context 'when credit card number is valid' do
+        let(:credit_card) { '4111111111111111' }
 
-    it 'set franchise with an invalid credit card' do
-      credit_card = '423435345345345'
-      new_failed_contact = FailedContact.create(credit_card: credit_card, contact_file: contact_file)
+        it 'set the franchise with the valid credit card information' do
+          expect(new_failed_contact).to have_attributes(
+            last_four_credit_card_numbers: credit_card.last(4),
+            franchise: 'Visa'
+          )
+        end
+      end
 
-      expect(new_failed_contact.last_four_credit_card_numbers).to eq(credit_card.last(4))
-      expect(new_failed_contact.franchise).to eq('Invalid franchise')
-    end
+      context 'when credit card number is invalid' do
+        let(:credit_card) { '423435345345345' }
 
-    it 'credit card as nil' do
-      credit_card = nil
-      new_failed_contact = FailedContact.create(credit_card: credit_card, contact_file: contact_file)
+        it 'sets the franchise with the invalid credit card information' do
+          expect(new_failed_contact).to have_attributes(
+            last_four_credit_card_numbers: credit_card.last(4),
+            franchise: 'Invalid franchise'
+          )
+        end
+      end
 
-      expect(new_failed_contact.last_four_credit_card_numbers).to eq(nil)
-      expect(new_failed_contact.franchise).to eq('Invalid franchise')
-      expect(new_failed_contact.credit_card).to eq('Invalid credit card')
+      context 'when credit card number is nil' do
+        let(:credit_card) { nil }
+
+        it 'sets both credit card and franchise with invalid information' do
+          expect(new_failed_contact).to have_attributes(
+            last_four_credit_card_numbers: nil,
+            franchise: 'Invalid franchise',
+            credit_card: 'Invalid credit card'
+          )
+        end
+      end
     end
   end
 end

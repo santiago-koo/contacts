@@ -24,8 +24,8 @@ class ContactFile < ApplicationRecord
   has_many :failed_contacts, dependent: :destroy
 
   def change_status
-    created_contacts = Contact.where(contact_file: self).count
-    created_failed_contacts = FailedContact.where(contact_file: self).count
+    created_contacts = contacts.count
+    created_failed_contacts = failed_contacts.count
 
     update(status: :finished) if created_contacts.positive? || created_contacts < created_failed_contacts
     update(status: :failed) if created_contacts.zero? && created_failed_contacts.positive?

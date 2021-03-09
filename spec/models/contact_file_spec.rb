@@ -25,7 +25,7 @@ RSpec.describe ContactFile, type: :model do
     it { should have_many(:failed_contacts) }
   end
 
-  context 'store csv_file' do
+  context 'csv_file storage' do
     it 'download csv_file content' do
       file = Rails.root.join('spec', 'fixtures', 'contacts.csv')
       csv_file = ActiveStorage::Blob.create_and_upload!(

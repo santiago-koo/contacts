@@ -1,8 +1,7 @@
-- table_headers = %w[email name birth_date phone_number address franchise last_four_credit_card_numbers created_at]
 %table.table
   %thead
     %tr
-      - table_headers.each do |table_header|
+      - %w[email name birth_date phone_number address franchise last_four_credit_card_numbers created_at].each do |table_header|
         %th{:scope => "col"}
           = table_header.humanize
   %tbody
@@ -15,7 +14,7 @@
         %td= contact.address
         %td= contact.franchise
         %td= contact.last_four_credit_card_numbers
-        %td= contact.created_at.strftime("%d-%m-%Y %H:%M")
+        %td= contact.created_at.to_formatted_s(:long)
 
 .row.mb-1
   = link_to "Back", contact_files_path

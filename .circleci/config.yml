@@ -7,32 +7,42 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/ruby:2.7-node
+      - image: cimg/ruby:2.7.2-node
     steps:
       - checkout
+      - run: sudo apt-get update && sudo apt-get install -y apt-transport-https
+      - run: sudo apt-get install -y libicu-dev
       - ruby/install-deps
       # Store bundle cache
       - node/install-packages:
           pkg-manager: yarn
           cache-key: "yarn.lock"
   test:
-    parallelism: 3
+    # parallelism: 3
     docker:
-      - image: cimg/ruby:2.7-node
-      - image: circleci/postgres:13-alpine
+      - image: cimg/ruby:2.7.2-node
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
+      - image: postgres:13-alpine
+        auth:
+          username: $DOCKERHUB_USERNAME
+          password: $DOCKERHUB_PASSWORD
         environment:
-          POSTGRES_USER: circleci-demo-ruby
-          POSTGRES_DB: rails_blog_test
-          POSTGRES_PASSWORD: ""
+          POSTGRES_USER: postgres
+          POSTGRES_DB: contacts_test
+          POSTGRES_PASSWORD: password
     environment:
       BUNDLE_JOBS: "3"
       BUNDLE_RETRY: "3"
       PGHOST: 127.0.0.1
-      PGUSER: circleci-demo-ruby
-      PGPASSWORD: ""
+      PGUSER: postgres
+      PGPASSWORD: password
       RAILS_ENV: test
     steps:
       - checkout
+      - run: sudo apt-get update && sudo apt-get install -y apt-transport-https
+      - run: sudo apt-get install -y libicu-dev
       - ruby/install-deps
       - node/install-packages:
           pkg-manager: yarn
@@ -44,14 +54,15 @@ jobs:
           name: Database setup
           command: bundle exec rails db:schema:load --trace
       # Run rspec in parallel
-      - ruby/rspec-test
-      - ruby/rubocop-check
+      - run: bundle exec rspec ./spec
+      # - ruby/rspec-test
 
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - build
       - test:
           requires:
             - build
+          context:
+            - contacts

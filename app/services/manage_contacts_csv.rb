@@ -11,16 +11,14 @@ class ManageContactsCsv
   def call
     return return_message(false, { error: 'Contact file has been processed' }) unless @contact_file.on_hold?
 
-    begin
-      @contact_file.update(status: :processing)
-      create_contacts_from_csv
-      @contact_file.change_status
+    @contact_file.processing!
+    create_contacts_from_csv
+    @contact_file.change_status
 
-      return_message(true, {})
-    rescue => e
-      @contact_file.update(status: :failed)
-      log_errors(e)
-    end
+    return_message(true, {})
+  rescue => e
+    @contact_file.failed!
+    log_errors(e)
   end
 
   private

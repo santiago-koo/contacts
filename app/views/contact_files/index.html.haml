@@ -25,5 +25,5 @@
 .row.mb-1
   = link_to "Upload contact files", new_contact_file_path, method: :get
 
--# .row
--#   = will_paginate @contact_files, renderer: BootstrapPagination::Rails
+.row
+  = raw pagy_bootstrap_nav(@pagy)

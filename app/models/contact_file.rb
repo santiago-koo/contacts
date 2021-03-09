@@ -27,7 +27,7 @@ class ContactFile < ApplicationRecord
     created_contacts = contacts.count
     created_failed_contacts = failed_contacts.count
 
-    update(status: :finished) if created_contacts.positive? || created_contacts < created_failed_contacts
-    update(status: :failed) if created_contacts.zero? && created_failed_contacts.positive?
+    finished! if created_contacts.positive? || created_contacts < created_failed_contacts
+    failed! if created_contacts.zero? && created_failed_contacts.positive?
   end
 end

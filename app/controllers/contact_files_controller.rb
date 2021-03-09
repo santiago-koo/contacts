@@ -2,7 +2,7 @@ class ContactFilesController < ApplicationController
   before_action :contact_file, except: %i[index new create]
 
   def index
-    @contact_files = current_user.contact_files.order(created_at: :desc)
+    @pagy, @contact_files = pagy(current_user.contact_files.order(created_at: :desc), items: 10)
   end
 
   def show
@@ -39,17 +39,12 @@ class ContactFilesController < ApplicationController
   end
 
   def process_csv
-    result = ::ManageContactsCsv.new(
-      {
-        headers: process_csv_params,
-        contact_file: @contact_file
-      }
-    ).call
-    if result.success?
-      redirect_to root_path, notice: 'CSV file processed successfully'
-    else
-      redirect_to root_path, alert: result.payload[:error]
-    end
+    ::ProcessContactFileWorker.perform_async(
+      process_csv_params,
+      @contact_file.id
+    )
+
+    redirect_to root_path, notice: 'CSV file is being processed'
   end
 
   private

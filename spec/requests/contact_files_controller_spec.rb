@@ -5,7 +5,7 @@ RSpec.describe ContactFilesController, type: :request do
 
   context 'when user are not signed in' do
     it 'should redirects to sign_in page' do
-      get '/'
+      get root_path
       expect(response).to have_http_status(302)
       expect(response).to redirect_to 'http://www.example.com/users/sign_in'
     end
@@ -17,7 +17,7 @@ RSpec.describe ContactFilesController, type: :request do
         let(:contact_file) { create(:contact_file, user: user) }
 
         it 'should include the contact_file name in the body' do
-          sign_in user
+          login_as(user, scope: :user)
           contact_file
 
           get root_path
@@ -28,7 +28,7 @@ RSpec.describe ContactFilesController, type: :request do
 
       context 'and the user has not any contact file' do
         it "should include 'There are not contact files yet' in the body" do
-          sign_in user
+          login_as(user, scope: :user)
 
           get root_path
           expect(response).to have_http_status(200)
@@ -43,7 +43,7 @@ RSpec.describe ContactFilesController, type: :request do
       let(:contact_file) { create(:contact_file, user: user) }
 
       it 'should redirect to contact_files page' do
-        sign_in user
+        login_as(user, scope: :user)
 
         get contact_file_path(contact_file.id)
         expect(response).to have_http_status(302)
@@ -55,7 +55,7 @@ RSpec.describe ContactFilesController, type: :request do
       let(:contact_file) { create(:contact_file, :finished, user: user) }
 
       it 'should shows all contacts related to' do
-        sign_in user
+        login_as(user, scope: :user)
 
         get contact_file_path(contact_file.id)
         expect(response).to have_http_status(200)
@@ -66,7 +66,7 @@ RSpec.describe ContactFilesController, type: :request do
       let(:contact_file) { 10_000 }
 
       it 'should redirect to 404' do
-        sign_in user
+        login_as(user, scope: :user)
 
         get contact_file_path(contact_file)
         expect(response).to have_http_status(404)
@@ -77,7 +77,7 @@ RSpec.describe ContactFilesController, type: :request do
   describe 'GET new' do
     context 'when a signed in user is about to create new contact file' do
       it 'should redirect it to new contact file page' do
-        sign_in user
+        login_as(user, scope: :user)
 
         get new_contact_file_path
         expect(response).to have_http_status(200)
@@ -95,7 +95,7 @@ RSpec.describe ContactFilesController, type: :request do
         let(:contact_file_params) { { contact_file: { file: Rack::Test::UploadedFile.new(file_path, 'text/csv') } } }
 
         it 'should redirect to index page with a notice flash message' do
-          sign_in user
+          login_as(user, scope: :user)
 
           post contact_files_path, params: contact_file_params
           expect(response).to have_http_status(302)
@@ -108,7 +108,7 @@ RSpec.describe ContactFilesController, type: :request do
         let(:contact_file_params) { { contact_file: nil } }
 
         it 'should redirect to index page if contact_file param is not present' do
-          sign_in user
+          login_as(user, scope: :user)
 
           post contact_files_path params: contact_file_params
           expect(response).to have_http_status(302)
@@ -123,7 +123,7 @@ RSpec.describe ContactFilesController, type: :request do
       let(:contact_file) { create(:contact_file, :finished, user: user) }
 
       it 'should redirect to contact_files page' do
-        sign_in user
+        login_as(user, scope: :user)
 
         get failed_contacts_contact_file_path(contact_file.id)
         expect(response).to have_http_status(200)
@@ -138,7 +138,7 @@ RSpec.describe ContactFilesController, type: :request do
 
       it 'should redirect to index page with a notice flash message' do
         Sidekiq::Testing.inline!
-        sign_in user
+        login_as(user, scope: :user)
 
         post process_csv_contact_file_path(contact_file), params: process_csv_params
         expect(response).to have_http_status(302)

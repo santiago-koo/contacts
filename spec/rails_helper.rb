@@ -7,6 +7,7 @@ SimpleCov.start 'rails' do
   add_filter '/app/channels'
   add_filter '/app/models/application_record.rb'
   add_group 'Services', 'app/services'
+  add_group 'Features', 'app/features'
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
@@ -17,13 +18,10 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 require 'devise'
-require 'support/database_cleaner'
-require 'support/shoulda_matchers'
-require 'support/csv_helper'
-require 'support/devise_request_spec_helper'
 require 'capybara/rspec'
 require 'sidekiq/testing'
 require 'rake'
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in

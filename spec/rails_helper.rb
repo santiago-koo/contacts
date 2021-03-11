@@ -1,3 +1,14 @@
+require 'simplecov'
+
+SimpleCov.start 'rails' do
+  add_filter '/app/jobs/application_job.rb'
+  add_filter '/app/mailers/application_mailer.rb'
+  add_filter '/app/helpers/application_helpers.rb'
+  add_filter '/app/channels'
+  add_filter '/app/models/application_record.rb'
+  add_group 'Services', 'app/services'
+end
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
 ENV['RAILS_ENV'] ||= 'test'
@@ -9,12 +20,10 @@ require 'devise'
 require 'support/database_cleaner'
 require 'support/shoulda_matchers'
 require 'support/csv_helper'
+require 'support/devise_request_spec_helper'
 require 'capybara/rspec'
 require 'sidekiq/testing'
 require 'rake'
-require 'simplecov'
-
-SimpleCov.start
 # Add additional requires below this line. Rails is not loaded until this point!
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -82,6 +91,7 @@ RSpec.configure do |config|
     Time.use_zone(example.metadata[:tz]) { example.run }
   end
 
+  config.include Warden::Test::Helpers
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include FactoryBot::Syntax::Methods
   config.include Capybara::DSL

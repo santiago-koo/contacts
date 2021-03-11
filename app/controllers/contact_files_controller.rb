@@ -6,7 +6,11 @@ class ContactFilesController < ApplicationController
   end
 
   def show
-    @pagy, @contacts = pagy(@contact_file.contacts.order(:created_at), items: 5)
+    if @contact_file.on_hold?
+      redirect_to contact_files_path
+    else
+      @pagy, @contacts = pagy(@contact_file.contacts.order(:created_at), items: 5)
+    end
   end
 
   def new
@@ -14,7 +18,7 @@ class ContactFilesController < ApplicationController
   end
 
   def create
-    if params[:contact_file].nil?
+    if !params[:contact_file].present?
       redirect_to contact_files_path
     else
       file_path = params[:contact_file][:file].try(:path)
@@ -44,7 +48,7 @@ class ContactFilesController < ApplicationController
       @contact_file.id
     )
 
-    redirect_to root_path, notice: 'CSV file is being processed'
+    redirect_to root_path, notice: 'CSV file is being processed. Lay on your couch and take an orange juice'
   end
 
   private

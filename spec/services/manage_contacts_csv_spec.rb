@@ -23,7 +23,7 @@ RSpec.describe ManageContactsCsv do
         it "the contact file status is 'finished' and 2 contacts and 2 failed contacts were created" do
           contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })
 
-          expect(result.success?).to eq(true)
+          expect(result.success?).to be true
           expect(contact_file.status).to eq('finished')
           expect(contacts_count).to eq(2)
           expect(failed_contacts_count).to eq(2)
@@ -36,7 +36,7 @@ RSpec.describe ManageContactsCsv do
         it "the contact file status is 'failed' and neither contacts nor failed contacts were created" do
           contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })
 
-          expect(result.success?).to eq(false)
+          expect(result.success?).to be false
           expect(contact_file.status).to eq('failed')
           expect(contacts_count).to eq(0)
           expect(failed_contacts_count).to eq(0)
@@ -52,7 +52,7 @@ RSpec.describe ManageContactsCsv do
         it "the contact file status is 'failed' and 4 failed contacts were created" do
           contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })
 
-          expect(result.success?).to eq(true)
+          expect(result.success?).to be true
           expect(contact_file.status).to eq('failed')
           expect(failed_contacts_count).to eq(4)
         end
@@ -65,10 +65,10 @@ RSpec.describe ManageContactsCsv do
         it 'raise an error message and neither contacts nor failed contacts are created' do
           processed_contact_file.save(validate: false)
 
-          expect(result.success?).to eq(false)
+          expect(result.success?).to be false
           expect(result.payload[:error]).to eq('Contact file has been processed')
-          expect(Contact.where(contact_file_id: processed_contact_file.id).count).to eq(0)
-          expect(FailedContact.where(contact_file: processed_contact_file).count).to eq(0)
+          expect(processed_contact_file.contacts.count).to be_zero
+          expect(processed_contact_file.failed_contacts.count).to be_zero
         end
       end
     end

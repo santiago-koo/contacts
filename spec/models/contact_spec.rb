@@ -19,17 +19,17 @@ require 'rails_helper'
 
 RSpec.describe Contact, type: :model do
   context 'relationships' do
-    it { should belong_to :contact_file }
+    it { is_expected.to belong_to :contact_file }
   end
 
   context 'validations' do
-    it { should validate_presence_of :email }
-    it { should validate_presence_of :phone_number }
-    it { should validate_presence_of :name }
-    it { should validate_presence_of :birth_date }
-    it { should validate_presence_of :address }
-    it { should validate_presence_of :credit_card }
-    it { should validate_uniqueness_of(:email).scoped_to(:contact_file_id).with_message('Email already taken') }
+    it { is_expected.to validate_presence_of :email }
+    it { is_expected.to validate_presence_of :phone_number }
+    it { is_expected.to validate_presence_of :name }
+    it { is_expected.to validate_presence_of :birth_date }
+    it { is_expected.to validate_presence_of :address }
+    it { is_expected.to validate_presence_of :credit_card }
+    it { is_expected.to validate_uniqueness_of(:email).scoped_to(:contact_file_id).with_message('Email already taken') }
   end
 
   context 'custom validations' do
@@ -43,7 +43,7 @@ RSpec.describe Contact, type: :model do
       new_contact.email = email
       new_contact.valid?
 
-      expect(new_contact.errors.messages[:email].first).to eq('Invalid email')
+      expect(new_contact.errors[:email]).to include('Invalid email')
     end
 
     it 'phone number is invalid with message' do

@@ -5,7 +5,6 @@ RSpec.describe ManageContactFile do
 
   describe '#call' do
     context 'upload a csv file' do
-      let(:filename) { filename }
       let(:file_path) { "spec/fixtures/#{filename}" }
       let(:result) { ::ManageContactFile.new({ file_path: file_path, user: user, filename: filename }).call }
 

@@ -8,4 +8,9 @@ module CsvHelper
     # Replace semicolon separator for comma
     file_content.gsub(';', ',')
   end
+
+  def attach_content(contact_file, file_path, filename)
+    file_content = normalize_csv_file(file_path)
+    contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })
+  end
 end

@@ -6,6 +6,7 @@ class ManageContactsCsv
   def initialize(params = {})
     @headers = params[:headers] || {}
     @contact_file = params[:contact_file]
+    @headers.try(:transform_keys!, &:to_sym)
   end
 
   def call

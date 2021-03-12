@@ -12,7 +12,7 @@ class ManageContactFile
   def call
     normalized_file_content = normalize_csv_file
     create_contact_file(normalized_file_content)
-  rescue => e
+  rescue StandardError => e
     log_errors(e)
   end
 
@@ -23,7 +23,7 @@ class ManageContactFile
     detection = CharlockHolmes::EncodingDetector.detect(File.read(@csv_file_path))
     encoding = detection[:encoding] == 'UTF-8' ? detection[:encoding].downcase : "#{detection[:encoding].downcase}:utf-8"
     # Read file and transform encoding to UTF-8
-    file_content = File.open(@csv_file_path, "r:#{encoding}"){ |f| f.read }
+    file_content = File.open(@csv_file_path, "r:#{encoding}", &:read)
     # Replace semicolon separator for comma
     file_content.gsub(';', ',')
   end

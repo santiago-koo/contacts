@@ -16,7 +16,7 @@ class ManageContactsCsv
     @contact_file.change_status
 
     return_message(true, {})
-  rescue => e
+  rescue StandardError => e
     @contact_file.failed!
     log_errors(e)
   end
@@ -50,11 +50,12 @@ class ManageContactsCsv
     new_contact.attributes.each do |contact_attribute, value|
       new_contact_error_messages = new_contact.errors.messages[contact_attribute.to_sym]
 
-      failed_contact_params[contact_attribute.to_sym] = if new_contact_error_messages.blank?
-                                                          value
-                                                        else
-                                                          new_contact_error_messages.sort.join(' - ')
-                                                        end
+      failed_contact_params[contact_attribute.to_sym] =
+        if new_contact_error_messages.blank?
+          value
+        else
+          new_contact_error_messages.sort.join(' - ')
+        end
     end
 
     FailedContact.create(failed_contact_params.merge({ contact_file: @contact_file }))

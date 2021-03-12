@@ -15,7 +15,10 @@ RSpec.describe ManageContactsCsv do
       let(:failed_contacts_count) { FailedContact.where(contact_file: contact_file).count }
 
       context 'when headers match and filename is correct' do
-        let(:headers) { { email: 'email', name: 'nombre', birth_date: 'fecha_de_nacimiento', phone_number: 'telefono', address: 'direccion', credit_card: 'tarjeta_de_credito' } }
+        let(:headers) do
+          { email: 'email', name: 'nombre', birth_date: 'fecha_de_nacimiento',
+            phone_number: 'telefono', address: 'direccion', credit_card: 'tarjeta_de_credito' }
+        end
 
         it "the contact file status is 'finished' and 2 contacts and 2 failed contacts were created" do
           contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })
@@ -41,7 +44,10 @@ RSpec.describe ManageContactsCsv do
       end
 
       context "when headers doesn't match but the filename is correct" do
-        let(:headers) { { email: 'email', name: 'name', birth_date: 'birth_date', phone_number: 'phone_number', address: 'address', credit_card: 'credit_card' } }
+        let(:headers) do
+          { email: 'email', name: 'name', birth_date: 'birth_date', phone_number: 'phone_number', address: 'address',
+            credit_card: 'credit_card' }
+        end
 
         it "the contact file status is 'failed' and 4 failed contacts were created" do
           contact_file.csv_file.attach({ io: StringIO.new(file_content), filename: filename })

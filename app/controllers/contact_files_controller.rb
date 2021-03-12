@@ -18,9 +18,7 @@ class ContactFilesController < ApplicationController
   end
 
   def create
-    if !params[:contact_file].present?
-      redirect_to contact_files_path
-    else
+    if params[:contact_file].present?
       file_path = params[:contact_file][:file].try(:path)
       filename = params[:contact_file][:file].try(:original_filename)
       result = ::ManageContactFile.new({ file_path: file_path, user: current_user, filename: filename }).call
@@ -29,6 +27,8 @@ class ContactFilesController < ApplicationController
       else
         redirect_to contact_files_path, alert: result.payload[:error]
       end
+    else
+      redirect_to contact_files_path
     end
   end
 

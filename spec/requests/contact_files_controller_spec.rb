@@ -133,7 +133,10 @@ RSpec.describe ContactFilesController, type: :request do
 
   describe 'GET process_csv' do
     context 'with correct params' do
-      let(:process_csv_params) { { process_csv: { email: 'test@test.com', name: 'Santiago', birth_date: '1995-11-29', phone_number: '(+00) 000 000 00 00', address: 'fake street 123', credit_card: '30569309025904' } } }
+      let(:process_csv_params) do
+        { process_csv: { email: 'test@test.com', name: 'Santiago', birth_date: '1995-11-29', phone_number: '(+00) 000 000 00 00',
+                         address: 'fake street 123', credit_card: '30569309025904' } }
+      end
       let(:contact_file) { create(:contact_file, user: user) }
 
       it 'should redirect to index page with a notice flash message' do

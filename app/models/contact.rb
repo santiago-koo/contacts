@@ -21,7 +21,8 @@ class Contact < ApplicationRecord
   PHONE_NUMBER_REGEX = /\(([+][0-9]{1,2})\)([ .-]?)([0-9]{3})(\s|-)([0-9]{3})(\s|-)([0-9]{2})(\s|-)([0-9]{2})/.freeze
   NAME_REGEX = /[A-Za-z0-9\-\s]/.freeze
 
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: 'Invalid email' }, presence: true, uniqueness: { scope: :contact_file_id, message: 'Email already taken' }
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP, message: 'Invalid email' }, presence: true,
+                    uniqueness: { scope: :contact_file_id, message: 'Email already taken' }
   validates :phone_number, format: { with: PHONE_NUMBER_REGEX, message: 'Invalid phone number' }, presence: true
   validates :name, format: { with: NAME_REGEX, message: 'Invalid Name' }, presence: true
   validates :birth_date, presence: true

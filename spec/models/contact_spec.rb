@@ -71,7 +71,7 @@ RSpec.describe Contact, type: :model do
   context 'when the given contact information is correct' do
     let(:user) { create(:user) }
     let(:contact_file) { create(:contact_file, user_id: user.id) }
-    let(:contact_params) {
+    let(:contact_params) do
       {
         email: 'test@test.com',
         phone_number: '(+00) 000-000-00-00',
@@ -81,7 +81,7 @@ RSpec.describe Contact, type: :model do
         credit_card: '4111111111111111',
         contact_file: contact_file
       }
-    }
+    end
 
     it 'new contact is valid' do
       new_contact = Contact.new(contact_params)

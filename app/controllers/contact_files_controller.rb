@@ -43,7 +43,7 @@ class ContactFilesController < ApplicationController
   end
 
   def process_csv
-    ::ProcessContactFileWorker.perform_async(
+    ::ProcessContactFileJob.perform_later(
       process_csv_params.to_h,
       @contact_file.id
     )

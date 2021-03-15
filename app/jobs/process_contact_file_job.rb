@@ -1,5 +1,5 @@
-class ProcessContactFileWorker
-  include Sidekiq::Worker
+class ProcessContactFileJob < ApplicationJob
+  queue_as :default
   sidekiq_options retry: false
 
   def perform(headers, contact_file_id)

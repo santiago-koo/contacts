@@ -25,6 +25,16 @@ RSpec.describe ManageContactFile do
           expect(ContactFile.count).to eq(0)
         end
       end
+
+      context 'a context' do
+        let(:filename) { 'contacts_without_content.csv' }
+
+        it 'no contact file is created and raise an error' do
+          expect(result.success?).to eq(false)
+          expect(result.payload[:errors][:original_headers]).to include("can't be blank")
+          expect(ContactFile.count).to eq(0)
+        end
+      end
     end
   end
 end

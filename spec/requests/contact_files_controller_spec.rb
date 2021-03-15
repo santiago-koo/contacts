@@ -122,6 +122,10 @@ RSpec.describe ContactFilesController, type: :request do
     end
 
     describe 'GET process_csv' do
+      before do
+        Sidekiq::Testing.inline!
+      end
+
       context 'with correct params' do
         let(:process_csv_params) do
           { process_csv: { email: 'email', name: 'nombre', birth_date: 'fecha_de_nacimiento', phone_number: 'telefono',
@@ -131,37 +135,14 @@ RSpec.describe ContactFilesController, type: :request do
         let(:file_path) { "spec/fixtures/#{filename}" }
         let(:contact_file) { create(:contact_file, user: user) }
 
-        it 'should redirect to index page with a notice flash message' do
-          Sidekiq::Testing.inline!
+        it 'should redirect to index page with a notice flash message and a job enqueued' do
           attach_content(contact_file, file_path, filename)
 
           post process_csv_contact_file_path(contact_file), params: process_csv_params
           expect(response).to have_http_status(302)
           expect(flash[:notice]).to eq('CSV file is being processed. Lay on your couch and take an orange juice')
-          expect(contact_file.contacts.count).to eq(2)
-          expect(contact_file.failed_contacts.count).to eq(2)
+          expect(enqueued_jobs.size).to eq(1)
         end
-      end
-
-      context 'with incorrect params' do
-        let(:process_csv_params) do
-          { process_csv: { email: 'email', name: 'name', birth_date: 'birth_date', phone_number: 'phone_number',
-                           address: 'address', credit_card: 'credit_card' } }
-        end
-        let(:filename) { 'contacts.csv' }
-        let(:file_path) { "spec/fixtures/#{filename}" }
-        let(:contact_file) { create(:contact_file, user: user) }
-
-        # it 'should redirect to index page with a notice flash message' do
-        #   Sidekiq::Testing.inline!
-        #   attach_content(contact_file, file_path, filename)
-
-        #   post process_csv_contact_file_path(contact_file), params: process_csv_params
-        #   expect(response).to have_http_status(302)
-        #   expect(flash[:notice]).to eq('CSV file is being processed. Lay on your couch and take an orange juice')
-        #   expect(contact_file.contacts.count).to eq(0)
-        #   expect(contact_file.failed_contacts.count).to eq(4)
-        # end
       end
     end
   end

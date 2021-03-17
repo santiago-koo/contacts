@@ -68,39 +68,47 @@ RSpec.describe ContactFilesController, type: :request do
       end
     end
 
-    describe 'GET new' do
-      context 'when a signed in user is about to create new contact file' do
-        it 'should redirect it to new contact file page' do
-          get new_contact_file_path
-          expect(response).to have_http_status(200)
-        end
-      end
-    end
-
-    describe 'GET create' do
+    describe 'POST create' do
       context 'when a signed in user goes to create a new contact file' do
-        let(:filename) { 'contacts.csv' }
-        let(:file_path) { "spec/fixtures/#{filename}" }
-        let(:contact_files_count) { ContactFile.count }
+        let(:file_path) { 'spec/fixtures/contacts.csv' }
 
         context 'with correct params' do
           let(:contact_file_params) { { contact_file: { file: Rack::Test::UploadedFile.new(file_path, 'text/csv') } } }
+          let(:manage_contact_files_instance) { instance_double(ManageContactFile) }
 
-          it 'should redirect to index page with a notice flash message' do
+          it 'sets success? equals true' do
+            allow(manage_contact_files_instance).to receive(:call) { double(success?: true) }
+            expect(ManageContactFile).to receive(:new).with(
+              file_path: instance_of(String),
+              user: user,
+              filename: instance_of(String)
+            ).and_return(manage_contact_files_instance)
+
             post contact_files_path, params: contact_file_params
             expect(response).to have_http_status(302)
             expect(flash[:notice]).to eq('File loaded successfully')
-            expect(contact_files_count).to be == 1
+          end
+
+          it 'sets success? equals false' do
+            allow(manage_contact_files_instance).to receive(:call) { double(success?: false, payload: {}) }
+            expect(ManageContactFile).to receive(:new).with(
+              file_path: instance_of(String),
+              user: user,
+              filename: instance_of(String)
+            ).and_return(manage_contact_files_instance)
+
+            post contact_files_path, params: contact_file_params
+            expect(response).to have_http_status(302)
           end
         end
 
         context 'without contact_file param' do
-          let(:contact_file_params) { { contact_file: nil } }
+          let(:contact_file_params) { {} }
 
           it 'should redirect to index page if contact_file param is not present' do
             post contact_files_path params: contact_file_params
             expect(response).to have_http_status(302)
-            expect(contact_files_count).to be_zero
+            expect(user.contact_files.count).to be_zero
           end
         end
       end
@@ -122,10 +130,6 @@ RSpec.describe ContactFilesController, type: :request do
     end
 
     describe 'GET process_csv' do
-      before do
-        Sidekiq::Testing.inline!
-      end
-
       context 'with correct params' do
         let(:process_csv_params) do
           { process_csv: { email: 'email', name: 'nombre', birth_date: 'fecha_de_nacimiento', phone_number: 'telefono',
@@ -138,10 +142,15 @@ RSpec.describe ContactFilesController, type: :request do
         it 'should redirect to index page with a notice flash message and a job enqueued' do
           attach_content(contact_file, file_path, filename)
 
-          post process_csv_contact_file_path(contact_file), params: process_csv_params
+          expect do
+            post process_csv_contact_file_path(contact_file), params: process_csv_params
+          end.to have_enqueued_job(ProcessContactFileJob).with(
+            { email: 'email', name: 'nombre', birth_date: 'fecha_de_nacimiento', phone_number: 'telefono',
+              address: 'direccion', credit_card: 'tarjeta_de_credito' }, contact_file.id
+          )
+
           expect(response).to have_http_status(302)
           expect(flash[:notice]).to eq('CSV file is being processed. Lay on your couch and take an orange juice')
-          expect(enqueued_jobs.size).to eq(1)
         end
       end
     end

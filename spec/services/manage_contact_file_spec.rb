@@ -26,7 +26,7 @@ RSpec.describe ManageContactFile do
         end
       end
 
-      context 'a context' do
+      context "when the csv file hasn't content" do
         let(:filename) { 'contacts_without_content.csv' }
 
         it 'no contact file is created and raise an error' do

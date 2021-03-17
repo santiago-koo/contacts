@@ -10,15 +10,6 @@ RSpec.describe ProcessContactFileJob, type: :job do
   let(:file_path) { "spec/fixtures/#{filename}" }
   let(:contact_file) { create(:contact_file, user: user) }
 
-  describe '#perform_later' do
-    it 'has been enqueued' do
-      ActiveJob::Base.queue_adapter = :test
-      expect do
-        ProcessContactFileJob.perform_later(process_contact_headers, contact_file.id)
-      end.to have_enqueued_job
-    end
-  end
-
   describe '#perform_now' do
     before do
       attach_content(contact_file, file_path, filename)

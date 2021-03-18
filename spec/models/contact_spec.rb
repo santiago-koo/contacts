@@ -69,8 +69,10 @@ RSpec.describe Contact, type: :model do
   end
 
   context 'when the given contact information is correct' do
-    let(:user) { create(:user) }
-    let(:contact_file) { create(:contact_file, user_id: user.id) }
+    # let(:user) { create(:user) }
+    let(:user) { stub_model(User) }
+    # let(:contact_file) { create(:contact_file, user_id: user.id) }
+    let(:contact_file) { stub_model(ContactFile, user: user, name: 'contact_file_test') }
     let(:contact_params) do
       {
         email: 'test@test.com',

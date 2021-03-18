@@ -32,6 +32,7 @@ group :development, :test do
   gem 'dotenv-rails', '~> 2.7', '>= 2.7.6'
   gem 'ffaker', '~> 2.18'
   gem 'pry', '~> 0.12.2'
+  gem 'rspec-activemodel-mocks', '~> 1.1'
   gem 'rspec-rails', '~> 4.0', '>= 4.0.2'
 end
 

@@ -9,8 +9,6 @@ RSpec.describe ManageContactsCsv do
       let(:filename) { 'contacts.csv' }
       let(:file_path) { "spec/fixtures/#{filename}" }
       let(:result) { ::ManageContactsCsv.new({ headers: headers, contact_file: contact_file }).call }
-      let(:contacts_count) { Contact.where(contact_file: contact_file).count }
-      let(:failed_contacts_count) { FailedContact.where(contact_file: contact_file).count }
 
       context 'with content' do
         before do
@@ -26,8 +24,8 @@ RSpec.describe ManageContactsCsv do
           it "the contact file status is 'finished' and 2 contacts and 2 failed contacts were created" do
             expect(result.success?).to be true
             expect(contact_file.status).to eq('finished')
-            expect(contacts_count).to eq(2)
-            expect(failed_contacts_count).to eq(2)
+            expect(contact_file.contacts.count).to eq(2)
+            expect(contact_file.failed_contacts.count).to eq(2)
           end
         end
 
@@ -37,8 +35,8 @@ RSpec.describe ManageContactsCsv do
           it "the contact file status is 'failed' and neither contacts nor failed contacts were created" do
             expect(result.success?).to be false
             expect(contact_file.status).to eq('failed')
-            expect(contacts_count).to eq(0)
-            expect(failed_contacts_count).to eq(0)
+            expect(contact_file.contacts.count).to eq(0)
+            expect(contact_file.failed_contacts.count).to eq(0)
           end
         end
 
@@ -51,17 +49,19 @@ RSpec.describe ManageContactsCsv do
           it "the contact file status is 'failed' and 4 failed contacts were created" do
             expect(result.success?).to be true
             expect(contact_file.status).to eq('failed')
-            expect(failed_contacts_count).to eq(4)
+            expect(contact_file.failed_contacts.count).to eq(4)
           end
         end
       end
 
       context 'when a contact file already has been processed' do
-        let(:processed_contact_file) { ContactFile.new(status: :finished) }
+        let(:processed_contact_file) { instance_double(ContactFile, id: 1, user: user, status: :finished) }
         let(:result) { ::ManageContactsCsv.new({ headers: {}, contact_file: processed_contact_file }).call }
 
         it 'raise an error message and neither contacts nor failed contacts are created' do
-          processed_contact_file.save(validate: false)
+          allow(processed_contact_file).to receive(:on_hold?) { false }
+          allow(processed_contact_file).to receive_message_chain(:contacts, :count) { 0 }
+          allow(processed_contact_file).to receive_message_chain(:failed_contacts, :count) { 0 }
 
           expect(result.success?).to be false
           expect(result.payload[:error]).to eq('Contact file has been processed')

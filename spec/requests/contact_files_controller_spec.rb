@@ -38,21 +38,56 @@ RSpec.describe ContactFilesController, type: :request do
 
     describe 'GET show' do
       context 'when the contact file has not been processed' do
-        let(:contact_file) { create(:contact_file, user: user) }
+        let(:contact_file) { instance_double(ContactFile, user: user, id: 1, status: :on_hold) }
 
         it 'should redirect to contact_files page' do
+          allow(contact_file).to receive(:on_hold?) { true }
+          user_contact_files = double([contact_file])
+          allow(user_contact_files).to receive(:take) { contact_file }
+
+          expect(user.contact_files).to receive(:where).with(
+            id: instance_of(String)
+          ).and_return(user_contact_files)
+
           get contact_file_path(contact_file.id)
           expect(response).to have_http_status(302)
           expect(response).to redirect_to 'http://www.example.com/contact_files'
         end
+
+        # it 'should redirect to contact_files page' do
+        #   get contact_file_path(contact_file.id)
+        #   expect(response).to have_http_status(302)
+        #   expect(response).to redirect_to 'http://www.example.com/contact_files'
+        # end
       end
 
       context 'when the contact file has been processed' do
+        # let(:contact_file) { instance_double(ContactFile, user: user, id: 1, status: :finished) }
+        # let(:correct_contacts) do
+        #   double(
+        #     2.times.map do |i|
+        #       instance_double(Contact, contact_file: contact_file, id: (i + 1), name: "contact_name_#{i + 1}",
+        #                                created_at: Time.current)
+        #     end
+        #   )
+        # end
         let(:contact_file) { create(:contact_file_with_contacts, :finished, contacts_count: 2, user: user) }
 
         it 'should shows all contacts related to' do
+          # user_contact_files = double([contact_file])
+          # allow(user_contact_files).to receive(:take) { contact_file }
+
+          # allow(user.contact_files).to receive(:where).with(
+          #   id: instance_of(String)
+          # ).and_return(user_contact_files)
+
+          # allow(contact_file).to receive_messages(on_hold?: false, contacts: correct_contacts)
+          # allow(correct_contacts).to receive_messages(order: correct_contacts, count: 2, offset: correct_contacts,
+          #                                             limit: correct_contacts, each: correct_contacts)
+
           get contact_file_path(contact_file.id)
           expect(response).to have_http_status(200)
+
           expect(response.body).to include(contact_file.contacts.first.name)
           expect(response.body).to include(contact_file.contacts.last.name)
         end
